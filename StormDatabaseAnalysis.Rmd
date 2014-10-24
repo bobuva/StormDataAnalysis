@@ -20,13 +20,23 @@ This section covers the processing of the data.
 #### Steps Taken
 1. Download the compressed data file.
 2. Decompress the file, feeding the output to the read.csv function to read the data file into a data.frame.
-3. TO-DO
+3. Sum the fatalities by the event type across all regions and store in a new
+data frame named harm.
+
+4. Sort harm by fatalities in descending order, bringing the most harmful event types to the top.
+
+5. Display the top six most harmful storm event types.
 
 #### Data Processing Code
-```{r}
+```{r cache=TRUE}
+
 library(downloader)
 download(url="https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2", destfile="StormData.csv.bz2")
 
 data1 <- read.csv(bzfile("StormData.csv.bz2"))
-summary(data1)
+
+harm <- aggregate(data1$FATALITIES, by=list(data1$EVTYPE), FUN=sum)
+colnames(harm) <- c("EventType", "Fatalities")
+harm <- harm[with(harm, order(-Fatalities)),]
+head(harm)
 ```
